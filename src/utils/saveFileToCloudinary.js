@@ -10,18 +10,19 @@ cloudinary.config({
 
 export function saveFileToCloudinary(buffer) {
   return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream({
-      folder: 'notes-app/avatar',
-      resource_type: 'image',
-      overwrite: true,
-      unique_filename: true,
-      use_filename: false,
-    });
-    (err, result) => (err ? reject(err) : resolve(result));
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: 'notes-app/avatar',
+        resource_type: 'image',
+        overwrite: true,
+        unique_filename: true,
+        use_filename: false,
+      },
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      },
+    );
     Readable.from(buffer).pipe(uploadStream);
   });
 }
-
-
-
-
